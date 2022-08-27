@@ -5,7 +5,7 @@
     <CarouselComponent :ip="ip"/>
     <div class="news">
       <p class="list">
-        <CardComponent class="card" v-for="cover in covers" :key="cover.cover" :cover="cover.cover"/>
+        <CardComponent v-for="cover in covers" :key="cover.cover" class="card"  :cover="cover.cover"/>
       </p>
       <!--      <p class="list">-->
       <!--      <CardComponent  class="card" v-for="cover in covers" :key="cover.cover" :cover="cover.cover"/>-->
@@ -36,7 +36,6 @@ export async function fetchMethod($axios, url) {
   const ip = await Promise.all(result)
   // .then((ip)=>{
   //   // eslint-disable-next-line no-console
-  console.log('ip---->', ip)
   //   this.addPokemonData(ip)
 
   // console.log('ip---->',this.pokemon)
@@ -53,7 +52,7 @@ const index = {
     CardComponent,
     NavigationMenuComponent,
   },
-  layout(context) {
+  layout() {
     return 'DefaultLayout'
   },
   data() {
@@ -90,7 +89,6 @@ const index = {
   },
   methods: {
     addPokemonData() {
-      console.log('thisIPxxxxxxxxxxxxxxxxxx>', this.ip)
       this.$store.commit('addPokemonData', this.ip)
     },
   },
