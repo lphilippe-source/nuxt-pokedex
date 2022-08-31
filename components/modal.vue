@@ -2,8 +2,8 @@
   <div>
     <a-button type="primary" @click="showModal">Open Modal</a-button>
     <a-modal v-model="visible" title="Basic Modal" @ok="handleOk">
-      <div>
-        <slot v-for="item in items" :item="item">
+      <div :class="classStyle" v-bind="$attrs">
+        <slot v-for="item in items" :item="item" >
         </slot>
       </div>
     </a-modal>
@@ -17,6 +17,10 @@ export default{
     items: {
       type: Array,
       default: () => []
+    },
+    classStyle: {
+      type: String,
+      default: ''
     }
   },
   setup() {
@@ -26,7 +30,6 @@ export default{
       visible.value = true;
     };
     const handleOk = (e ) => {
-      console.log(e);
       visible.value = false;
     };
     return {

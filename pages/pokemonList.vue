@@ -1,16 +1,29 @@
 <template>
   <div>
-    <ModalComponent/>
     <PaginationComponent @page="fetch"/>
     <div v-if="!pokemon?.ip">
       <template  v-for="item in 5"  >
         <a-skeleton :key="item" active />
       </template>
     </div>
+
+    <ModalComponent :items="pokemon.ip">
+      <div slot-scope="row" >
+        {{ row.item.name }}
+      </div>
+    </ModalComponent>
     <div v-for="item in pokemon?.ip" :key="item.id">
+
       <a-descriptions bordered :title="item.name + ' Info'" layout="vertical">
         <a-descriptions-item :label="item.name">
           <img :src="item.sprites.front_shiny" :alt="item.name"/>
+          <ModalComponent :items="item.sprites |convertToArrayAndDelete2LastEntries" :class-style="'img-list-modal'">
+            <div slot-scope="row"  >
+              <p>
+                <img  :src="row.item " :alt="row.item"/>
+              </p>
+            </div>
+          </ModalComponent>
         </a-descriptions-item>
         <a-descriptions-item label="ABILITES">
           <div v-for="ab in item.abilities" :key="ab.ability.name">{{ ab.ability.name }}
@@ -40,6 +53,11 @@ export default {
     PaginationComponent,
     ModalComponent
   },
+  filters:{
+   convertToArrayAndDelete2LastEntries(obj) {
+     return Object.values(obj).slice(0, -2)
+    }
+  },
   data() {
     return {
       pokemon: [],
@@ -65,14 +83,12 @@ export default {
     addThisPokemonToDex(item) {
       this.checkDouble(item) && this.addPokemonData([...this.pokeStore,item])
     },
-
     deleteThisPokemonFromDex(item) {
       const storeMinusOne = [...this.pokeStore].filter(poke => poke.id !== item.id)
       !this.checkDouble(item) && this.addPokemonData(storeMinusOne)
     },
     checkDouble(item) {
-     if(!this.pokeStore.find(pokemon => pokemon.id === item.id)) return item
-      else return false
+     return !this.pokeStore.find(pokemon => pokemon.id === item.id)
     }
   },
 }
@@ -81,6 +97,14 @@ export default {
 .button {
   display: inline;
   flex-direction: column;
+  margin:auto;
+  justify-content: center;
+  align-items: center;
+}
+
+.img-list-modal {
+  display: flex;
+  flex-direction: row;
   margin:auto;
   justify-content: center;
   align-items: center;
